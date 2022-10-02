@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AdminService implements UserDetailsService {
@@ -45,10 +47,20 @@ public class AdminService implements UserDetailsService {
         return adminRepository.save(new Admin(adminDTO));
     }
 
+    public boolean checkPassword(String password){
+        Pattern p = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"); //Minimum eight characters, at least one letter and one number:
+        Matcher m = p.matcher(password);
+        return m.matches();
+    }
+
     public ResponseEntity<?> createNewUser(AdminDTO adminDTO) {
         if(!adminRepository.existsByUsername(adminDTO.getUsername())) {
-            Admin newAdmin = saveDTO(adminDTO);
-            return new ResponseEntity<>(newAdmin, HttpStatus.OK);
+            if(checkPassword(adminDTO.getPassword())){
+                Admin newAdmin = saveDTO(adminDTO);
+                return new ResponseEntity<>(newAdmin, HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity<>("Password "+ adminDTO.getPassword()+" doesn't meet requirements.", HttpStatus.BAD_REQUEST);
         }
         else
             return new ResponseEntity<>("Username "+ adminDTO.getUsername()+" already exists.", HttpStatus.BAD_REQUEST);

@@ -29,7 +29,4 @@ public class Student {
     @JsonIgnore
     @ManyToMany
     Set<Course> enrolledCourses;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "studentStacks")
-    Set<Stack> stacks;
 }

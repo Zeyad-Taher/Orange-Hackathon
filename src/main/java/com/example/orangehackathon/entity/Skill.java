@@ -22,14 +22,10 @@ public class Skill {
     @JsonIgnore
     @ManyToMany
     Set<Course> courseSkills;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "stackSkills")
-    Set<Stack> stacks;
 
     public Skill(Long id,String name){
         this.id=id;
         this.name=name;
         this.courseSkills=new HashSet<>();
-        this.stacks=new HashSet<>();
     }
 }
