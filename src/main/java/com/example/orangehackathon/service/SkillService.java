@@ -1,6 +1,7 @@
 package com.example.orangehackathon.service;
 
 import com.example.orangehackathon.dto.SkillDTO;
+import com.example.orangehackathon.entity.Course;
 import com.example.orangehackathon.entity.Skill;
 import com.example.orangehackathon.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,13 @@ public class SkillService {
 
     public void deleteSkill(Long id) {
         skillRepository.deleteById(id);
+    }
+
+    public Skill findSkillById(Long skillId){
+        return skillRepository.findById(skillId).get();
+    }
+
+    public void saveSkill(Skill skill){
+        skillRepository.save(skill);
     }
 }

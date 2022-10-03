@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,11 +21,11 @@ public class Skill {
     private String name;
     @JsonIgnore
     @ManyToMany
-    Set<Course> courseSkills;
+    List<Course> courseSkills;
 
     public Skill(Long id,String name){
         this.id=id;
         this.name=name;
-        this.courseSkills=new HashSet<>();
+        this.courseSkills=new ArrayList<>();
     }
 }

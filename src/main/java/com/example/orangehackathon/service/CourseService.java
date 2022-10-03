@@ -8,14 +8,14 @@ import com.example.orangehackathon.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
-    private SkillRepository skillRepository;
+    private SkillService skillService;
 
     public void addCourse(CourseDTO courseDTO) {
         Course course = new Course(courseDTO.getId(),courseDTO.getName(), courseDTO.getCategory());
@@ -32,14 +32,14 @@ public class CourseService {
 
     public void assignSkillToCourse(Long courseId, Long skillId) {
         Course course = courseRepository.findById(courseId).get();
-        Skill skill = skillRepository.findById(skillId).get();
-        Set<Course> courses=skill.getCourseSkills();
-        Set<Skill> skills=course.getAchievableSkills();
+        Skill skill = skillService.findSkillById(skillId);
+        List<Course> courses=skill.getCourseSkills();
+        List<Skill> skills=course.getAchievableSkills();
         courses.add(course);
         skills.add(skill);
         skill.setCourseSkills(courses);
         course.setAchievableSkills(skills);
-        skillRepository.save(skill);
+        skillService.saveSkill(skill);
         courseRepository.save(course);
     }
 }

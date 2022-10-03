@@ -1,11 +1,10 @@
 package com.example.orangehackathon.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,18 +23,18 @@ public class Course {
     @Column(name="passed",columnDefinition = "boolean default false")
     private boolean passed;
     @ManyToMany(mappedBy = "courseSkills")
-    Set<Skill> achievableSkills;
+    List<Skill> achievableSkills;
     @ManyToMany(mappedBy = "coursePrerequisites")
-    Set<Prerequisite> prerequisites;
+    List<Prerequisite> prerequisites;
     @ManyToMany(mappedBy = "enrolledCourses")
-    Set<Student> studentsCourses;
+    List<Student> studentsCourses;
 
     public Course(Long id,String name,String category){
         this.id=id;
         this.name=name;
         this.category=category;
-        this.achievableSkills=new HashSet<>();
-        this.prerequisites=new HashSet<>();
-        this.studentsCourses=new HashSet<>();
+        this.achievableSkills=new ArrayList<>();
+        this.prerequisites=new ArrayList<>();
+        this.studentsCourses=new ArrayList<>();
     }
 }

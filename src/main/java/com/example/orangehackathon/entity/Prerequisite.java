@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,5 +22,5 @@ public class Prerequisite {
     private String category;
     @JsonIgnore
     @ManyToMany
-    Set<Course> coursePrerequisites;
+    List<Course> coursePrerequisites;
 }

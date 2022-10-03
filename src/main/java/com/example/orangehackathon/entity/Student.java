@@ -5,7 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -28,5 +28,5 @@ public class Student {
     private String email;
     @JsonIgnore
     @ManyToMany
-    Set<Course> enrolledCourses;
+    List<Course> enrolledCourses;
 }
