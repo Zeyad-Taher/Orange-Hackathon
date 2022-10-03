@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Entity(name="course")
+@Entity(name = "course")
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +25,11 @@ public class Course {
     private int duration;
     @Column(name="passed",columnDefinition = "boolean default false")
     private boolean passed;
+    @OneToMany
+    @Column(name="prerequisites",nullable = false)
+    private List<Course> prerequisites;
     @ManyToMany
     List<Skill> skills;
-    @ManyToMany
-    List<Prerequisite> prerequisites;
     @ManyToMany
     List<Student> students;
 
@@ -37,8 +38,8 @@ public class Course {
         this.name=courseDTO.getName();
         this.category=courseDTO.getCategory();
         this.duration=courseDTO.getDuration();
-        this.skills=new ArrayList<>();
         this.prerequisites=new ArrayList<>();
+        this.skills=new ArrayList<>();
         this.students=new ArrayList<>();
     }
 }

@@ -29,13 +29,18 @@ public class CourseController {
         courseService.deleteCourse(id);
     }
 
-    @PutMapping(value="/assign/skill/{courseId}/{skillId}")
-    public void assignSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
-        courseService.assignSkillToCourse(courseId,skillId);
+    @PutMapping(value="/add/skill/{courseId}/{skillId}")
+    public void addSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
+        courseService.addSkillToCourse(courseId,skillId);
     }
 
     @PutMapping(value="/enroll/student/{courseId}/{studentId}")
-    public void assignStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId){
-        courseService.assignStudentToCourse(courseId,studentId);
+    public void enrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId){
+        courseService.enrollStudentToCourse(courseId,studentId);
+    }
+
+    @PutMapping(value="/add/pre/{courseId}/{preId}")
+    public void assignStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
+        courseService.addPrerequisiteToCourse(courseId,preId);
     }
 }

@@ -32,7 +32,7 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    public void assignSkillToCourse(Long courseId, Long skillId) {
+    public void addSkillToCourse(Long courseId, Long skillId) {
         Course course = courseRepository.findById(courseId).get();
         Skill skill = skillService.findSkillById(skillId);
         List<Course> courses=skill.getCourses();
@@ -45,7 +45,7 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public void assignStudentToCourse(Long courseId, Long studentId) {
+    public void enrollStudentToCourse(Long courseId, Long studentId) {
         Course course = courseRepository.findById(courseId).get();
         Student student = studentService.findStudentById(studentId);
         List<Course> courses=student.getCourses();
@@ -55,6 +55,15 @@ public class CourseService {
         student.setCourses(courses);
         course.setStudents(students);
         studentService.saveStudent(student);
+        courseRepository.save(course);
+    }
+
+    public void addPrerequisiteToCourse(Long courseId, Long preId) {
+        Course course=courseRepository.findById(courseId).get();
+        Course prerequisite=courseRepository.findById(preId).get();
+        List<Course> prerequisites=course.getPrerequisites();
+        prerequisites.add(prerequisite);
+        course.setPrerequisites(prerequisites);
         courseRepository.save(course);
     }
 }
