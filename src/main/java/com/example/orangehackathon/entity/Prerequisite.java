@@ -21,6 +21,6 @@ public class Prerequisite {
     @Column(name="category",nullable = false)
     private String category;
     @JsonIgnore
-    @ManyToMany
-    List<Course> coursePrerequisites;
+    @ManyToMany(mappedBy = "prerequisites")
+    List<Course> courses;
 }

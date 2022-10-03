@@ -1,9 +1,9 @@
 package com.example.orangehackathon.repository;
 
-import com.example.orangehackathon.entity.Course;
+import com.example.orangehackathon.entity.Student;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CourseRepository extends CrudRepository<Course,Long> {
+public interface StudentRepository extends CrudRepository<Student,Long> {
 }

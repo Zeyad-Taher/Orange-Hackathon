@@ -2,7 +2,6 @@ package com.example.orangehackathon.controller;
 
 import com.example.orangehackathon.dto.CourseDTO;
 import com.example.orangehackathon.entity.Course;
-import com.example.orangehackathon.entity.Skill;
 import com.example.orangehackathon.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,5 +32,10 @@ public class CourseController {
     @PutMapping(value="/assign/skill/{courseId}/{skillId}")
     public void assignSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
         courseService.assignSkillToCourse(courseId,skillId);
+    }
+
+    @PutMapping(value="/enroll/student/{courseId}/{studentId}")
+    public void assignStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId){
+        courseService.assignStudentToCourse(courseId,studentId);
     }
 }

@@ -2,8 +2,6 @@ package com.example.orangehackathon.dto;
 
 import lombok.*;
 
-import javax.persistence.Column;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

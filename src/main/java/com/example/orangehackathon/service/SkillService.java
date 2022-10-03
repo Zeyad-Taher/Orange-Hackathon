@@ -15,7 +15,7 @@ public class SkillService {
     private SkillRepository skillRepository;
 
     public void addSkill(SkillDTO skillDTO) {
-        Skill skill=new Skill(skillDTO.getId(),skillDTO.getName());
+        Skill skill=new Skill(skillDTO);
         skillRepository.save(skill);
     }
 

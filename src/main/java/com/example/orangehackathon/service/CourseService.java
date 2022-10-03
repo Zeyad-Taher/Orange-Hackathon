@@ -3,8 +3,8 @@ package com.example.orangehackathon.service;
 import com.example.orangehackathon.dto.CourseDTO;
 import com.example.orangehackathon.entity.Course;
 import com.example.orangehackathon.entity.Skill;
+import com.example.orangehackathon.entity.Student;
 import com.example.orangehackathon.repository.CourseRepository;
-import com.example.orangehackathon.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -16,9 +16,11 @@ public class CourseService {
     private CourseRepository courseRepository;
     @Autowired
     private SkillService skillService;
+    @Autowired
+    private StudentService studentService;
 
     public void addCourse(CourseDTO courseDTO) {
-        Course course = new Course(courseDTO.getId(),courseDTO.getName(), courseDTO.getCategory());
+        Course course = new Course(courseDTO);
         courseRepository.save(course);
     }
 
@@ -33,13 +35,26 @@ public class CourseService {
     public void assignSkillToCourse(Long courseId, Long skillId) {
         Course course = courseRepository.findById(courseId).get();
         Skill skill = skillService.findSkillById(skillId);
-        List<Course> courses=skill.getCourseSkills();
-        List<Skill> skills=course.getAchievableSkills();
+        List<Course> courses=skill.getCourses();
+        List<Skill> skills=course.getSkills();
         courses.add(course);
         skills.add(skill);
-        skill.setCourseSkills(courses);
-        course.setAchievableSkills(skills);
+        skill.setCourses(courses);
+        course.setSkills(skills);
         skillService.saveSkill(skill);
+        courseRepository.save(course);
+    }
+
+    public void assignStudentToCourse(Long courseId, Long studentId) {
+        Course course = courseRepository.findById(courseId).get();
+        Student student = studentService.findStudentById(studentId);
+        List<Course> courses=student.getCourses();
+        List<Student> students=course.getStudents();
+        courses.add(course);
+        students.add(student);
+        student.setCourses(courses);
+        course.setStudents(students);
+        studentService.saveStudent(student);
         courseRepository.save(course);
     }
 }
