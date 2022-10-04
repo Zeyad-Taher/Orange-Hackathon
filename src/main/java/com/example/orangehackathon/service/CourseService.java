@@ -38,13 +38,18 @@ public class CourseService {
     public void addSkillToCourse(Long courseId, Long skillId) {
         Course course = courseRepository.findById(courseId).get();
         Skill skill = skillService.findSkillById(skillId);
-        List<Course> courses=skill.getCourses();
         List<Skill> skills=course.getSkills();
-        courses.add(course);
         skills.add(skill);
-        skill.setCourses(courses);
         course.setSkills(skills);
-        skillService.saveSkill(skill);
+        courseRepository.save(course);
+    }
+
+    public void delSkillToCourse(Long courseId, Long skillId) {
+        Course course = courseRepository.findById(courseId).get();
+        Skill skill = skillService.findSkillById(skillId);
+        List<Skill> skills=course.getSkills();
+        skills.remove(skill);
+        course.setSkills(skills);
         courseRepository.save(course);
     }
 
@@ -53,6 +58,15 @@ public class CourseService {
         Student student = studentService.findStudentById(studentId);
         List<Student> students=course.getStudents();
         students.add(student);
+        course.setStudents(students);
+        courseRepository.save(course);
+    }
+
+    public void unrollStudentToCourse(Long courseId, Long studentId) {
+        Course course = courseRepository.findById(courseId).get();
+        Student student = studentService.findStudentById(studentId);
+        List<Student> students=course.getStudents();
+        students.remove(student);
         course.setStudents(students);
         courseRepository.save(course);
     }
@@ -66,10 +80,25 @@ public class CourseService {
         courseRepository.save(course);
     }
 
+    public void delPrerequisiteToCourse(Long courseId, Long preId) {
+        Course course=courseRepository.findById(courseId).get();
+        Course prerequisite=courseRepository.findById(preId).get();
+        List<Course> prerequisites=course.getPrerequisites();
+        prerequisites.remove(prerequisite);
+        course.setPrerequisites(prerequisites);
+        courseRepository.save(course);
+    }
+
     public void addSupplierToCourse(Long courseId, Long supId) {
         Course course=courseRepository.findById(courseId).get();
         Supplier supplier=supplierService.findSupplierById(supId);
         course.setSupplier(supplier);
+        courseRepository.save(course);
+    }
+
+    public void delSupplierToCourse(Long courseId) {
+        Course course=courseRepository.findById(courseId).get();
+        course.setSupplier(new Supplier());
         courseRepository.save(course);
     }
 }

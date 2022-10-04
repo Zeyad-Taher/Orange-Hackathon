@@ -48,4 +48,24 @@ public class CourseController {
     public void assignSupToCourse(@PathVariable Long courseId, @PathVariable Long supId){
         courseService.addSupplierToCourse(courseId,supId);
     }
+
+    @PutMapping(value="/del/skill/{courseId}/{skillId}")
+    public void delSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
+        courseService.delSkillToCourse(courseId,skillId);
+    }
+
+    @PutMapping(value="/unroll/student/{courseId}/{studentId}")
+    public void unrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId){
+        courseService.unrollStudentToCourse(courseId,studentId);
+    }
+
+    @PutMapping(value="/del/pre/{courseId}/{preId}")
+    public void delStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
+        courseService.delPrerequisiteToCourse(courseId,preId);
+    }
+
+    @PutMapping(value="/del/sup/{courseId}")
+    public void delSupToCourse(@PathVariable Long courseId){
+        courseService.delSupplierToCourse(courseId);
+    }
 }
