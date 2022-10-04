@@ -21,5 +21,4 @@ public class CourseDTO {
     private Date endDate;
     private Time startTime;
     private Time endTime;
-    private Supplier supplier;
 }

@@ -4,6 +4,7 @@ import com.example.orangehackathon.dto.CourseDTO;
 import com.example.orangehackathon.entity.Course;
 import com.example.orangehackathon.entity.Skill;
 import com.example.orangehackathon.entity.Student;
+import com.example.orangehackathon.entity.Supplier;
 import com.example.orangehackathon.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ public class CourseService {
     private SkillService skillService;
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private SupplierService supplierService;
 
     public void addCourse(CourseDTO courseDTO) {
         Course course = new Course(courseDTO);
@@ -48,13 +51,9 @@ public class CourseService {
     public void enrollStudentToCourse(Long courseId, Long studentId) {
         Course course = courseRepository.findById(courseId).get();
         Student student = studentService.findStudentById(studentId);
-        List<Course> courses=student.getCourses();
         List<Student> students=course.getStudents();
-        courses.add(course);
         students.add(student);
-        student.setCourses(courses);
         course.setStudents(students);
-        studentService.saveStudent(student);
         courseRepository.save(course);
     }
 
@@ -64,6 +63,13 @@ public class CourseService {
         List<Course> prerequisites=course.getPrerequisites();
         prerequisites.add(prerequisite);
         course.setPrerequisites(prerequisites);
+        courseRepository.save(course);
+    }
+
+    public void addSupplierToCourse(Long courseId, Long supId) {
+        Course course=courseRepository.findById(courseId).get();
+        Supplier supplier=supplierService.findSupplierById(supId);
+        course.setSupplier(supplier);
         courseRepository.save(course);
     }
 }

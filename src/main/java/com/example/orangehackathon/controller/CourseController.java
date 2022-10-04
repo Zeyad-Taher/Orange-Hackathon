@@ -43,4 +43,9 @@ public class CourseController {
     public void assignStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
         courseService.addPrerequisiteToCourse(courseId,preId);
     }
+
+    @PutMapping(value="/add/sup/{courseId}/{supId}")
+    public void assignSupToCourse(@PathVariable Long courseId, @PathVariable Long supId){
+        courseService.addSupplierToCourse(courseId,supId);
+    }
 }
