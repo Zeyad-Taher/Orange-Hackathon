@@ -27,10 +27,15 @@ public class Skill {
     @ManyToMany(mappedBy = "gainedSkills")
     List<Student> students;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "requiredSkills")
+    List<Job> jobs;
+
     public Skill(SkillDTO skillDTO){
         this.id=skillDTO.getId();
         this.name=skillDTO.getName();
         this.courses=new ArrayList<>();
         this.students=new ArrayList<>();
+        this.jobs=new ArrayList<>();
     }
 }

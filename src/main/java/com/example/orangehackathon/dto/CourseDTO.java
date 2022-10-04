@@ -2,6 +2,10 @@ package com.example.orangehackathon.dto;
 
 import lombok.*;
 
+import javax.persistence.Column;
+import java.sql.Time;
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,5 +15,10 @@ public class CourseDTO {
     private Long id;
     private String name;
     private String category;
-    private int duration;
+    private String location;
+    private String cooperation;
+    private Date startDate;
+    private Date endDate;
+    private Time startTime;
+    private Time endTime;
 }

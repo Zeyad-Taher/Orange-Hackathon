@@ -28,6 +28,14 @@ public class Student {
     private String email;
     @Column(name="age",nullable = false)
     private int age;
+    @Column(name="gender",nullable = false)
+    private String gender;
+    @Column(name="phoneNumber",nullable = false)
+    private String phoneNumber;
+    @Column(name="nationalId",nullable = false)
+    private String nationalId;
+    @Column(name="status",nullable = false)
+    private String status;
     @JsonIgnore
     @ManyToMany(mappedBy = "students")
     List<Course> courses;
