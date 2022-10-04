@@ -39,6 +39,7 @@ public class Student {
     @JsonIgnore
     @ManyToMany(mappedBy = "students")
     List<Course> courses;
+    @JsonIgnore
     @ManyToMany
     List<Skill> gainedSkills;
 

@@ -1,8 +1,8 @@
 package com.example.orangehackathon.dto;
 
+import com.example.orangehackathon.entity.Supplier;
 import lombok.*;
 
-import javax.persistence.Column;
 import java.sql.Time;
 import java.util.Date;
 
@@ -21,4 +21,5 @@ public class CourseDTO {
     private Date endDate;
     private Time startTime;
     private Time endTime;
+    private Supplier supplier;
 }

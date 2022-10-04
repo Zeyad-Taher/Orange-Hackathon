@@ -58,5 +58,6 @@ public class Course {
         this.prerequisites=new ArrayList<>();
         this.skills=new ArrayList<>();
         this.students=new ArrayList<>();
+        this.supplier=courseDTO.getSupplier();
     }
 }

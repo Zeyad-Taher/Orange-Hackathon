@@ -1,8 +1,11 @@
 package com.example.orangehackathon.entity;
 
+import com.example.orangehackathon.dto.JobDTO;
+import com.example.orangehackathon.dto.StudentDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,4 +26,11 @@ public class Job {
     private float salary;
     @ManyToMany
     private List<Skill> requiredSkills;
+    public Job(JobDTO jobDTO){
+        this.id=jobDTO.getId();
+        this.organization=jobDTO.getOrganization();
+        this.description=jobDTO.getDescription();
+        this.salary=jobDTO.getSalary();
+        this.requiredSkills=new ArrayList<>();
+    }
 }
