@@ -1,5 +1,6 @@
 package com.example.orangehackathon.service;
 
+import com.example.orangehackathon.dto.DashboardDTO;
 import com.example.orangehackathon.dto.SupplierDTO;
 import com.example.orangehackathon.entity.Supplier;
 import com.example.orangehackathon.repository.SupplierRepository;
@@ -32,5 +33,18 @@ public class SupplierService {
 
     public void saveSupplier(Supplier supplier) {
         supplierRepository.save(supplier);
+    }
+
+    public DashboardDTO getDashboard(DashboardDTO dashboardDTO) {
+        dashboardDTO.setTotalPaid(0);
+        dashboardDTO.setTotalDebt(0);
+        ArrayList<Supplier> suppliers = showAllSuppliers();
+        dashboardDTO.setSuppliers(suppliers);
+        for(Supplier supplier : suppliers){
+            dashboardDTO.setTotalDebt(dashboardDTO.getTotalDebt()+supplier.getDebt());
+            dashboardDTO.setTotalPaid(dashboardDTO.getTotalPaid()+supplier.getPaid());
+        }
+        dashboardDTO.setTotalRemaining(dashboardDTO.getTotalDebt()- dashboardDTO.getTotalRemaining());
+        return dashboardDTO;
     }
 }

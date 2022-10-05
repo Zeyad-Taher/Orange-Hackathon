@@ -1,5 +1,6 @@
 package com.example.orangehackathon.service;
 
+import com.example.orangehackathon.dto.DashboardDTO;
 import com.example.orangehackathon.dto.StudentDTO;
 import com.example.orangehackathon.entity.Student;
 import com.example.orangehackathon.repository.StudentRepository;
@@ -33,5 +34,10 @@ public class StudentService {
 
     public void saveStudent(Student student) {
         studentRepository.save(student);
+    }
+
+    public void setNumberOfStudents(DashboardDTO dashboardDTO) {
+        int students=showAllStudents().size();
+        dashboardDTO.setTotalNumberOfStudents(students);
     }
 }

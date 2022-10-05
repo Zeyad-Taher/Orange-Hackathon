@@ -1,9 +1,6 @@
 package com.example.orangehackathon.dto;
 
-import com.example.orangehackathon.entity.Course;
 import lombok.*;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor

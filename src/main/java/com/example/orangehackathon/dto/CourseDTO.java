@@ -14,6 +14,7 @@ import java.util.Date;
 public class CourseDTO {
     private Long id;
     private String name;
+    private String code;
     private String category;
     private String location;
     private String cooperation;

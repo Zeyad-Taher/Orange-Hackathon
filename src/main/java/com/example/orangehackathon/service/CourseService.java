@@ -1,6 +1,7 @@
 package com.example.orangehackathon.service;
 
 import com.example.orangehackathon.dto.CourseDTO;
+import com.example.orangehackathon.dto.DashboardDTO;
 import com.example.orangehackathon.entity.Course;
 import com.example.orangehackathon.entity.Skill;
 import com.example.orangehackathon.entity.Student;
@@ -100,5 +101,10 @@ public class CourseService {
         Course course=courseRepository.findById(courseId).get();
         course.setSupplier(new Supplier());
         courseRepository.save(course);
+    }
+
+    public void setNumberOfCourses(DashboardDTO dashboardDTO) {
+        int courses=showAllCourses().size();
+        dashboardDTO.setNumberOfCurrentCourses(courses);
     }
 }

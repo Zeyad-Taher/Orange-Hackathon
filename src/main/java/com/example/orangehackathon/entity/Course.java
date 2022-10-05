@@ -21,6 +21,8 @@ public class Course {
     private Long id;
     @Column(name="name",nullable = false)
     private String name;
+    @Column(name="code",nullable = false)
+    private String code;
     @Column(name="category",nullable = false)
     private String category;
     @Column(name="location",nullable = false)
@@ -49,6 +51,7 @@ public class Course {
     public Course(CourseDTO courseDTO){
         this.id=courseDTO.getId();
         this.name=courseDTO.getName();
+        this.code=courseDTO.getCode();
         this.category=courseDTO.getCategory();
         this.location=courseDTO.getLocation();
         this.startDate=courseDTO.getStartDate();

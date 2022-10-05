@@ -1,5 +1,6 @@
 package com.example.orangehackathon.controller;
 
+import com.example.orangehackathon.dto.DashboardDTO;
 import com.example.orangehackathon.dto.SupplierDTO;
 import com.example.orangehackathon.entity.Supplier;
 import com.example.orangehackathon.service.SupplierService;
