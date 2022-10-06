@@ -28,7 +28,7 @@ public class JobService {
     }
 
     public Job findJobById(Long jobId) {
-        return jobRepository.findById(jobId).get();
+        return jobRepository.findById(jobId).orElse(null);
     }
 
     public void saveJob(Job job) {

@@ -75,4 +75,14 @@ public class CourseController {
     public ResponseEntity<?> enrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId,@PathVariable String progress) {
         return courseService.setStudentProgressInCourse(courseId,studentId,progress);
     }
+
+    @GetMapping(value = "/recommend/courseId")
+    public ResponseEntity<?> recommendStudentToCourse(@PathVariable Long courseId){
+        return courseService.recommendStudentsToCourse(courseId);
+    }
+
+    @GetMapping(value = "/recommend/jobId")
+    public ResponseEntity<?> recommendStudentToJob(@PathVariable Long jobId){
+        return courseService.recommendStudentsToJob(jobId);
+    }
 }

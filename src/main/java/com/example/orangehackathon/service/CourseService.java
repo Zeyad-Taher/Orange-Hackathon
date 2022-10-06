@@ -2,10 +2,7 @@ package com.example.orangehackathon.service;
 
 import com.example.orangehackathon.dto.CourseDTO;
 import com.example.orangehackathon.dto.DashboardDTO;
-import com.example.orangehackathon.entity.Course;
-import com.example.orangehackathon.entity.Skill;
-import com.example.orangehackathon.entity.Student;
-import com.example.orangehackathon.entity.Supplier;
+import com.example.orangehackathon.entity.*;
 import com.example.orangehackathon.repository.CourseRepository;
 import com.example.orangehackathon.utlities.CompareTwoDates;
 import com.example.orangehackathon.utlities.EmailDetails;
@@ -32,6 +29,8 @@ public class CourseService {
     private CompareTwoDates compareTwoDates;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private JobService jobService;
 
     public void addCourse(CourseDTO courseDTO) {
         Course course = new Course(courseDTO);
@@ -210,6 +209,58 @@ public class CourseService {
             email.setSubject("ODC - Course registration");
             emailService.sendSimpleMail(email);
             return new ResponseEntity<>("Student Progress updated successfully. Email will be sent shortly.",HttpStatus.ACCEPTED);
+        }
+    }
+
+    public ResponseEntity<?> recommendStudentsToCourse(Long courseId){
+        ArrayList<Student> students=studentService.showAllStudents();
+        ArrayList<Student> recommended=new ArrayList<>();
+        Course course=courseRepository.findById(courseId).orElse(null);
+        if(course==null){
+            return new ResponseEntity<>("Please enter a valid course ID",HttpStatus.BAD_REQUEST);
+        }
+        ArrayList<Skill> courseSkills= (ArrayList<Skill>) course.getSkills();
+        for (Student student:students){
+            ArrayList<Skill> studentSkills= (ArrayList<Skill>) student.getGainedSkills();
+            boolean meetCriteria=checkPrerequisites(course,studentSkills);
+            if(meetCriteria){
+                recommended.add(student);
+            }
+        }
+        if(recommended.isEmpty()){
+            return new ResponseEntity<>("No student meet the course prerequisites.",HttpStatus.ACCEPTED);
+        }
+        else{
+            return new ResponseEntity<>(recommended,HttpStatus.ACCEPTED);
+        }
+    }
+
+    public ResponseEntity<?> recommendStudentsToJob(Long jobId){
+        ArrayList<Student> students=studentService.showAllStudents();
+        ArrayList<Student> recommended=new ArrayList<>();
+        Job job=jobService.findJobById(jobId);
+        if(job==null){
+            return new ResponseEntity<>("Please enter a valid job ID",HttpStatus.BAD_REQUEST);
+        }
+        ArrayList<Skill> jobSkills= (ArrayList<Skill>) job.getRequiredSkills();
+        for (Student student:students){
+            ArrayList<Skill> studentSkills= (ArrayList<Skill>) student.getGainedSkills();
+            boolean meetCriteria=true;
+            for (Skill skill:jobSkills){
+                if(!studentSkills.contains(skill)){
+                    meetCriteria=false;
+                    break;
+                }
+            }
+            if(meetCriteria){
+                recommended.add(student);
+            }
+        }
+        if(recommended.isEmpty()){
+            return new ResponseEntity<>("No student meet the job required skills.",HttpStatus.ACCEPTED);
+        }
+        else{
+            return new ResponseEntity<>(recommended,HttpStatus.ACCEPTED);
         }
     }
 }
