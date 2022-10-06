@@ -6,7 +6,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,14 +21,14 @@ public class Skill {
     private String name;
     @JsonIgnore
     @ManyToMany(mappedBy = "skills")
-    List<Course> courses;
+    ArrayList<Course> courses;
     @JsonIgnore
     @ManyToMany(mappedBy = "gainedSkills")
-    List<Student> students;
+    ArrayList<Student> students;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "requiredSkills")
-    List<Job> jobs;
+    ArrayList<Job> jobs;
 
     public Skill(SkillDTO skillDTO){
         this.id=skillDTO.getId();

@@ -1,11 +1,8 @@
 package com.example.orangehackathon.dto;
 
-import com.example.orangehackathon.entity.Supplier;
 import lombok.*;
 
 import java.sql.Time;
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,9 +14,10 @@ public class CourseDTO {
     private String code;
     private String category;
     private String location;
+    private String progress;
     private String cooperation;
-    private Date startDate;
-    private Date endDate;
-    private Time startTime;
-    private Time endTime;
+    private String startDate;
+    private String endDate;
+    private String startTime;
+    private String endTime;
 }

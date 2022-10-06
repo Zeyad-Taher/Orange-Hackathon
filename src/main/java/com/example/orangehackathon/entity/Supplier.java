@@ -1,13 +1,11 @@
 package com.example.orangehackathon.entity;
 
-import com.example.orangehackathon.dto.StudentDTO;
 import com.example.orangehackathon.dto.SupplierDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +25,7 @@ public class Supplier {
     private float paid;
     @JsonIgnore
     @OneToMany(mappedBy = "supplier")
-    private List<Course> suppliedCourses;
+    private ArrayList<Course> suppliedCourses;
     public Supplier(SupplierDTO supplierDTO){
         this.id=supplierDTO.getId();
         this.name=supplierDTO.getName();

@@ -7,10 +7,16 @@ import com.example.orangehackathon.entity.Skill;
 import com.example.orangehackathon.entity.Student;
 import com.example.orangehackathon.entity.Supplier;
 import com.example.orangehackathon.repository.CourseRepository;
+import com.example.orangehackathon.utlities.CompareTwoDates;
+import com.example.orangehackathon.utlities.EmailDetails;
+import com.example.orangehackathon.utlities.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CourseService {
@@ -22,6 +28,10 @@ public class CourseService {
     private StudentService studentService;
     @Autowired
     private SupplierService supplierService;
+    @Autowired
+    private CompareTwoDates compareTwoDates;
+    @Autowired
+    private EmailService emailService;
 
     public void addCourse(CourseDTO courseDTO) {
         Course course = new Course(courseDTO);
@@ -39,7 +49,7 @@ public class CourseService {
     public void addSkillToCourse(Long courseId, Long skillId) {
         Course course = courseRepository.findById(courseId).get();
         Skill skill = skillService.findSkillById(skillId);
-        List<Skill> skills=course.getSkills();
+        ArrayList<Skill> skills=course.getSkills();
         skills.add(skill);
         course.setSkills(skills);
         courseRepository.save(course);
@@ -48,34 +58,103 @@ public class CourseService {
     public void delSkillToCourse(Long courseId, Long skillId) {
         Course course = courseRepository.findById(courseId).get();
         Skill skill = skillService.findSkillById(skillId);
-        List<Skill> skills=course.getSkills();
+        ArrayList<Skill> skills=course.getSkills();
         skills.remove(skill);
         course.setSkills(skills);
         courseRepository.save(course);
     }
 
-    public void enrollStudentToCourse(Long courseId, Long studentId) {
+    public boolean checkConflict(Course course,ArrayList<Course> enrolled) throws ParseException {
+        return compareTwoDates.compareDateAndTime(course, enrolled);
+    }
+
+    public boolean checkPrerequisites(Course course,ArrayList<Skill> studentSkills){
+        ArrayList<Course> prerequisites=course.getPrerequisites();
+        for(Course pre : prerequisites){
+            ArrayList<Skill> preSkills=pre.getSkills();
+            for(Skill skill:preSkills){
+                if(!studentSkills.contains(skill)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public ResponseEntity<?> enrollStudentToCourse(Long courseId, Long studentId) throws ParseException {
         Course course = courseRepository.findById(courseId).get();
         Student student = studentService.findStudentById(studentId);
-        List<Student> students=course.getStudents();
-        students.add(student);
-        course.setStudents(students);
-        courseRepository.save(course);
+        ArrayList<Course> courses=student.getCourses();
+        if(!checkConflict(course,courses)){
+            course.setProgress("Time conflict");
+            ArrayList<Student> students = course.getStudents();
+            courses.add(course);
+            students.add(student);
+            course.setStudents(students);
+            student.setCourses(courses);
+            courseRepository.save(course);
+            studentService.saveStudent(student);
+            EmailDetails email = new EmailDetails();
+            email.setRecipient(student.getEmail());
+            email.setMsgBody("Hello "+student.getFirstname()+",\nSorry, your request to enroll "+course.getName()+" has been " +
+                    "rejected due to time conflict with another course.\nBest of Luck.");
+            email.setSubject("ODC - Course registration");
+            emailService.sendSimpleMail(email);
+            return new ResponseEntity<>("Can't enroll in course to due to time conflict.", HttpStatus.BAD_REQUEST);
+        }
+        else if (checkPrerequisites(course,student.getGainedSkills())){
+            ArrayList<Student> students = course.getStudents();
+            course.setProgress("Waiting for interview");
+            courses.add(course);
+            students.add(student);
+            course.setStudents(students);
+            student.setCourses(courses);
+            courseRepository.save(course);
+            studentService.saveStudent(student);
+            EmailDetails email = new EmailDetails();
+            email.setRecipient(student.getEmail());
+            email.setMsgBody("Hello "+student.getFirstname()+",\nCongratulation, your request to enroll "+course.getName()+" has been " +
+                    "accepted and we will send the interview details soon.\nBest of Luck.");
+            email.setSubject("ODC - Course registration");
+            emailService.sendSimpleMail(email);
+            return new ResponseEntity<>("You have enrolled "+course.getName()+" successfully. You will receive email shortly.",HttpStatus.ACCEPTED);
+        }
+        else{
+            course.setProgress("Criteria not met");
+            ArrayList<Student> students = course.getStudents();
+            courses.add(course);
+            students.add(student);
+            course.setStudents(students);
+            student.setCourses(courses);
+            courseRepository.save(course);
+            studentService.saveStudent(student);
+            EmailDetails email = new EmailDetails();
+            email.setRecipient(student.getEmail());
+            email.setMsgBody("Hello "+student.getFirstname()+",\nSorry, your request to enroll "+course.getName()+" has been " +
+                    "rejected because you don't have the minimum prerequisites.\nBest of Luck.");
+            email.setSubject("ODC - Course registration");
+            emailService.sendSimpleMail(email);
+            return new ResponseEntity<>("You have enrolled "+course.getName()+" successfully. You will receive email shortly.",HttpStatus.ACCEPTED);
+        }
     }
 
     public void unrollStudentToCourse(Long courseId, Long studentId) {
         Course course = courseRepository.findById(courseId).get();
         Student student = studentService.findStudentById(studentId);
-        List<Student> students=course.getStudents();
+        ArrayList<Student> students=course.getStudents();
+        ArrayList<Course> courses=student.getCourses();
         students.remove(student);
+        courses.remove(course);
         course.setStudents(students);
+        student.setCourses(courses);
         courseRepository.save(course);
+        studentService.saveStudent(student);
     }
 
     public void addPrerequisiteToCourse(Long courseId, Long preId) {
         Course course=courseRepository.findById(courseId).get();
         Course prerequisite=courseRepository.findById(preId).get();
-        List<Course> prerequisites=course.getPrerequisites();
+        ArrayList<Course> prerequisites=course.getPrerequisites();
         prerequisites.add(prerequisite);
         course.setPrerequisites(prerequisites);
         courseRepository.save(course);
@@ -84,7 +163,7 @@ public class CourseService {
     public void delPrerequisiteToCourse(Long courseId, Long preId) {
         Course course=courseRepository.findById(courseId).get();
         Course prerequisite=courseRepository.findById(preId).get();
-        List<Course> prerequisites=course.getPrerequisites();
+        ArrayList<Course> prerequisites=course.getPrerequisites();
         prerequisites.remove(prerequisite);
         course.setPrerequisites(prerequisites);
         courseRepository.save(course);
@@ -106,5 +185,31 @@ public class CourseService {
     public void setNumberOfCourses(DashboardDTO dashboardDTO) {
         int courses=showAllCourses().size();
         dashboardDTO.setNumberOfCurrentCourses(courses);
+    }
+
+    public ResponseEntity<?> setStudentProgressInCourse(Long courseId,Long studentId,String progress){
+        Course course=courseRepository.findById(courseId).orElse(null);
+        if(course==null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
+        Student student=studentService.findStudentById(studentId);
+        ArrayList<Course> courses=student.getCourses();
+        int index=courses.indexOf(course);
+        if(index==-1){
+            return new ResponseEntity<>("This course is not enrolled by student",HttpStatus.BAD_REQUEST);
+        }
+        else{
+            courses.remove(index);
+            course.setProgress(progress);
+            courses.add(course);
+            studentService.saveStudent(student);
+            EmailDetails email = new EmailDetails();
+            email.setRecipient(student.getEmail());
+            email.setMsgBody("Hello "+student.getFirstname()+",\nYour progress in "+course.getName()+" course has been " +
+                    "updated to "+progress+".\nBest of Luck.");
+            email.setSubject("ODC - Course registration");
+            emailService.sendSimpleMail(email);
+            return new ResponseEntity<>("Student Progress updated successfully. Email will be sent shortly.",HttpStatus.ACCEPTED);
+        }
     }
 }

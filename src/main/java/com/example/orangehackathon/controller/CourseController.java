@@ -4,8 +4,10 @@ import com.example.orangehackathon.dto.CourseDTO;
 import com.example.orangehackathon.entity.Course;
 import com.example.orangehackathon.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 @RestController
@@ -35,8 +37,8 @@ public class CourseController {
     }
 
     @PutMapping(value="/enroll/student/{courseId}/{studentId}")
-    public void enrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId){
-        courseService.enrollStudentToCourse(courseId,studentId);
+    public ResponseEntity<?> enrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId) throws ParseException {
+        return courseService.enrollStudentToCourse(courseId,studentId);
     }
 
     @PutMapping(value="/add/pre/{courseId}/{preId}")
@@ -67,5 +69,10 @@ public class CourseController {
     @PutMapping(value="/del/sup/{courseId}")
     public void delSupToCourse(@PathVariable Long courseId){
         courseService.delSupplierToCourse(courseId);
+    }
+
+    @PutMapping(value="/update/student/{courseId}/{studentId}/{progress}")
+    public ResponseEntity<?> enrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId,@PathVariable String progress) {
+        return courseService.setStudentProgressInCourse(courseId,studentId,progress);
     }
 }

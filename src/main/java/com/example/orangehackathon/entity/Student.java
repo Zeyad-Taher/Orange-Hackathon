@@ -1,13 +1,11 @@
 package com.example.orangehackathon.entity;
 
 import com.example.orangehackathon.dto.StudentDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -36,12 +34,10 @@ public class Student {
     private String nationalId;
     @Column(name="status",nullable = false)
     private String status;
-    @JsonIgnore
     @ManyToMany(mappedBy = "students")
-    List<Course> courses;
-    @JsonIgnore
+    ArrayList<Course> courses;
     @ManyToMany
-    List<Skill> gainedSkills;
+    ArrayList<Skill> gainedSkills;
 
     public Student(StudentDTO studentDTO){
         this.id=studentDTO.getId();

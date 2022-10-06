@@ -1,13 +1,11 @@
 package com.example.orangehackathon.entity;
 
 import com.example.orangehackathon.dto.CourseDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,26 +25,27 @@ public class Course {
     private String category;
     @Column(name="location",nullable = false)
     private String location;
-    @Column(name="passed",columnDefinition = "boolean default false")
-    private boolean passed;
+    @Column(name="progress",columnDefinition = "boolean default Not Invited")
+    private String progress;
     @Column(name="startDate",nullable = false)
-    private Date startDate;
+    private String startDate;
     @Column(name="endDate",nullable = false)
-    private Date endDate;
+    private String endDate;
     @Column(name="startTime",nullable = false)
-    private Time startTime;
+    private String startTime;
     @Column(name="endTime",nullable = false)
-    private Time endTime;
-    @OneToMany
-    @Column(name="prerequisites",nullable = false)
-    private List<Course> prerequisites;
-    @ManyToMany
-    List<Skill> skills;
-    @ManyToMany
-    List<Student> students;
+    private String endTime;
     @JoinColumn(name = "supplier_id")
     @ManyToOne
     private Supplier supplier;
+    @ManyToMany
+    ArrayList<Skill> skills;
+    @OneToMany
+    @Column(name="prerequisites",nullable = false)
+    private ArrayList<Course> prerequisites;
+    @JsonIgnore
+    @ManyToMany
+    ArrayList<Student> students;
 
     public Course(CourseDTO courseDTO){
         this.id=courseDTO.getId();
@@ -54,6 +53,7 @@ public class Course {
         this.code=courseDTO.getCode();
         this.category=courseDTO.getCategory();
         this.location=courseDTO.getLocation();
+        this.progress=courseDTO.getProgress();
         this.startDate=courseDTO.getStartDate();
         this.endDate=courseDTO.getEndDate();
         this.startTime=courseDTO.getStartTime();
