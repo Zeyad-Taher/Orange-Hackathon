@@ -40,7 +40,7 @@ public class StudentController {
         return studentService.findStudentWithPagination(offset,pageSize);
     }
 
-    @GetMapping("/pagination/{offset}/{pageSize/{field}")
+    @GetMapping("/pagination/{offset}/{pageSize}/{field}")
     private Page<Student> getStudentsWithPaginationAndSort(@PathVariable int offset,@PathVariable int pageSize,@PathVariable String field){
         return studentService.findStudentWithPaginationAndSorting(offset,pageSize,field);
     }

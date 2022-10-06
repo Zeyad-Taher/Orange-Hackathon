@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +24,7 @@ public class Job {
     @Column(name = "salary",nullable = false)
     private float salary;
     @ManyToMany
-    private ArrayList<Skill> requiredSkills;
+    private List<Skill> requiredSkills;
     public Job(JobDTO jobDTO){
         this.id=jobDTO.getId();
         this.organization=jobDTO.getOrganization();

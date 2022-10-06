@@ -4,6 +4,7 @@ import com.example.orangehackathon.entity.Course;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +14,5 @@ import java.util.ArrayList;
 public class SkillDTO {
     private Long id;
     private String name;
-    ArrayList<Course> courses;
+    List<Course> courses;
 }

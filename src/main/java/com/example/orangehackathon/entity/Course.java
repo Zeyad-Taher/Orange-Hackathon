@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class Course {
     private String category;
     @Column(name="location",nullable = false)
     private String location;
-    @Column(name="progress",columnDefinition = "boolean default Not Invited")
+    @Column(name="progress",columnDefinition = "varchar(255) default 'Not invited'")
     private String progress;
     @Column(name="startDate",nullable = false)
     private String startDate;
@@ -39,13 +40,13 @@ public class Course {
     @ManyToOne
     private Supplier supplier;
     @ManyToMany
-    ArrayList<Skill> skills;
+    private List<Skill> skills;
     @OneToMany
     @Column(name="prerequisites",nullable = false)
-    private ArrayList<Course> prerequisites;
+    private List<Course> prerequisites;
     @JsonIgnore
     @ManyToMany
-    ArrayList<Student> students;
+    private List<Student> students;
 
     public Course(CourseDTO courseDTO){
         this.id=courseDTO.getId();

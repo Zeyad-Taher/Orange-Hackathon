@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -35,9 +36,9 @@ public class Student {
     @Column(name="status",nullable = false)
     private String status;
     @ManyToMany(mappedBy = "students")
-    ArrayList<Course> courses;
+    List<Course> courses;
     @ManyToMany
-    ArrayList<Skill> gainedSkills;
+    List<Skill> gainedSkills;
 
     public Student(StudentDTO studentDTO){
         this.id=studentDTO.getId();

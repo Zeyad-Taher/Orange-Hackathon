@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class Supplier {
     private float paid;
     @JsonIgnore
     @OneToMany(mappedBy = "supplier")
-    private ArrayList<Course> suppliedCourses;
+    private List<Course> suppliedCourses;
     public Supplier(SupplierDTO supplierDTO){
         this.id=supplierDTO.getId();
         this.name=supplierDTO.getName();

@@ -49,7 +49,7 @@ public class CourseService {
     public void addSkillToCourse(Long courseId, Long skillId) {
         Course course = courseRepository.findById(courseId).get();
         Skill skill = skillService.findSkillById(skillId);
-        ArrayList<Skill> skills=course.getSkills();
+        ArrayList<Skill> skills= (ArrayList<Skill>) course.getSkills();
         skills.add(skill);
         course.setSkills(skills);
         courseRepository.save(course);
@@ -58,7 +58,7 @@ public class CourseService {
     public void delSkillToCourse(Long courseId, Long skillId) {
         Course course = courseRepository.findById(courseId).get();
         Skill skill = skillService.findSkillById(skillId);
-        ArrayList<Skill> skills=course.getSkills();
+        ArrayList<Skill> skills= (ArrayList<Skill>) course.getSkills();
         skills.remove(skill);
         course.setSkills(skills);
         courseRepository.save(course);
@@ -69,9 +69,9 @@ public class CourseService {
     }
 
     public boolean checkPrerequisites(Course course,ArrayList<Skill> studentSkills){
-        ArrayList<Course> prerequisites=course.getPrerequisites();
+        ArrayList<Course> prerequisites= (ArrayList<Course>) course.getPrerequisites();
         for(Course pre : prerequisites){
-            ArrayList<Skill> preSkills=pre.getSkills();
+            ArrayList<Skill> preSkills= (ArrayList<Skill>) pre.getSkills();
             for(Skill skill:preSkills){
                 if(!studentSkills.contains(skill)){
                     return false;
@@ -84,10 +84,10 @@ public class CourseService {
     public ResponseEntity<?> enrollStudentToCourse(Long courseId, Long studentId) throws ParseException {
         Course course = courseRepository.findById(courseId).get();
         Student student = studentService.findStudentById(studentId);
-        ArrayList<Course> courses=student.getCourses();
+        ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
         if(!checkConflict(course,courses)){
             course.setProgress("Time conflict");
-            ArrayList<Student> students = course.getStudents();
+            ArrayList<Student> students = (ArrayList<Student>) course.getStudents();
             courses.add(course);
             students.add(student);
             course.setStudents(students);
@@ -102,9 +102,9 @@ public class CourseService {
             emailService.sendSimpleMail(email);
             return new ResponseEntity<>("Can't enroll in course to due to time conflict.", HttpStatus.BAD_REQUEST);
         }
-        else if (checkPrerequisites(course,student.getGainedSkills())){
-            ArrayList<Student> students = course.getStudents();
-            course.setProgress("Waiting for interview");
+        else if (checkPrerequisites(course, (ArrayList<Skill>) student.getGainedSkills())){
+            ArrayList<Student> students = (ArrayList<Student>) course.getStudents();
+            course.setProgress("Not invited");
             courses.add(course);
             students.add(student);
             course.setStudents(students);
@@ -121,7 +121,7 @@ public class CourseService {
         }
         else{
             course.setProgress("Criteria not met");
-            ArrayList<Student> students = course.getStudents();
+            ArrayList<Student> students = (ArrayList<Student>) course.getStudents();
             courses.add(course);
             students.add(student);
             course.setStudents(students);
@@ -141,8 +141,8 @@ public class CourseService {
     public void unrollStudentToCourse(Long courseId, Long studentId) {
         Course course = courseRepository.findById(courseId).get();
         Student student = studentService.findStudentById(studentId);
-        ArrayList<Student> students=course.getStudents();
-        ArrayList<Course> courses=student.getCourses();
+        ArrayList<Student> students= (ArrayList<Student>) course.getStudents();
+        ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
         students.remove(student);
         courses.remove(course);
         course.setStudents(students);
@@ -154,7 +154,7 @@ public class CourseService {
     public void addPrerequisiteToCourse(Long courseId, Long preId) {
         Course course=courseRepository.findById(courseId).get();
         Course prerequisite=courseRepository.findById(preId).get();
-        ArrayList<Course> prerequisites=course.getPrerequisites();
+        ArrayList<Course> prerequisites= (ArrayList<Course>) course.getPrerequisites();
         prerequisites.add(prerequisite);
         course.setPrerequisites(prerequisites);
         courseRepository.save(course);
@@ -163,7 +163,7 @@ public class CourseService {
     public void delPrerequisiteToCourse(Long courseId, Long preId) {
         Course course=courseRepository.findById(courseId).get();
         Course prerequisite=courseRepository.findById(preId).get();
-        ArrayList<Course> prerequisites=course.getPrerequisites();
+        ArrayList<Course> prerequisites= (ArrayList<Course>) course.getPrerequisites();
         prerequisites.remove(prerequisite);
         course.setPrerequisites(prerequisites);
         courseRepository.save(course);
@@ -193,7 +193,7 @@ public class CourseService {
             return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
         }
         Student student=studentService.findStudentById(studentId);
-        ArrayList<Course> courses=student.getCourses();
+        ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
         int index=courses.indexOf(course);
         if(index==-1){
             return new ResponseEntity<>("This course is not enrolled by student",HttpStatus.BAD_REQUEST);
