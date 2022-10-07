@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CourseService {
@@ -42,10 +43,10 @@ public class CourseService {
     }
 
     public ResponseEntity<?> showAllCourses() {
-        return new ResponseEntity<>((ArrayList<Course>) courseRepository.findAll(),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(courseRepository.findAll(),HttpStatus.ACCEPTED);
     }
 
-    public ResponseEntity<?> addSkillToCourse(Long courseId, Long skillId) {
+    public ResponseEntity<?> addSkillToCourse(Long courseId,Long skillId) {
         Course course = courseRepository.findById(courseId).orElse(null);
         if(course == null){
             return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
@@ -54,7 +55,7 @@ public class CourseService {
         if(skill == null){
             return new ResponseEntity<>("Invalid skill ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Skill> skills= (ArrayList<Skill>) course.getSkills();
+        List<Skill> skills= course.getSkills();
         skills.add(skill);
         course.setSkills(skills);
         courseRepository.save(course);
@@ -70,21 +71,21 @@ public class CourseService {
         if(skill == null){
             return new ResponseEntity<>("Invalid skill ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Skill> skills= (ArrayList<Skill>) course.getSkills();
+        List<Skill> skills= course.getSkills();
         skills.remove(skill);
         course.setSkills(skills);
         courseRepository.save(course);
         return new ResponseEntity<>(course,HttpStatus.ACCEPTED);
     }
 
-    public boolean checkConflict(Course course,ArrayList<Course> enrolled) throws ParseException {
+    public boolean checkConflict(Course course,List<Course> enrolled) throws ParseException {
         return compareTwoDates.compareDateAndTime(course, enrolled);
     }
 
-    public boolean checkPrerequisites(Course course,ArrayList<Skill> studentSkills){
-        ArrayList<Course> prerequisites= (ArrayList<Course>) course.getPrerequisites();
+    public boolean checkPrerequisites(Course course,List<Skill> studentSkills){
+        List<Course> prerequisites= course.getPrerequisites();
         for(Course pre : prerequisites){
-            ArrayList<Skill> preSkills= (ArrayList<Skill>) pre.getSkills();
+            List<Skill> preSkills= pre.getSkills();
             for(Skill skill:preSkills){
                 if(!studentSkills.contains(skill)){
                     return false;
@@ -103,10 +104,10 @@ public class CourseService {
         if(student == null){
             return new ResponseEntity<>("Invalid student ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
+        List<Course> courses= student.getCourses();
         if(!checkConflict(course,courses)){
             course.setProgress("Time conflict");
-            ArrayList<Student> students = (ArrayList<Student>) course.getStudents();
+            List<Student> students = course.getStudents();
             courses.add(course);
             students.add(student);
             course.setStudents(students);
@@ -121,8 +122,8 @@ public class CourseService {
             emailService.sendSimpleMail(email);
             return new ResponseEntity<>("Can't enroll in course to due to time conflict.", HttpStatus.BAD_REQUEST);
         }
-        else if (checkPrerequisites(course, (ArrayList<Skill>) student.getGainedSkills())){
-            ArrayList<Student> students = (ArrayList<Student>) course.getStudents();
+        else if (checkPrerequisites(course, student.getGainedSkills())){
+            List<Student> students = course.getStudents();
             course.setProgress("Not invited");
             courses.add(course);
             students.add(student);
@@ -140,7 +141,7 @@ public class CourseService {
         }
         else{
             course.setProgress("Criteria not met");
-            ArrayList<Student> students = (ArrayList<Student>) course.getStudents();
+            List<Student> students = course.getStudents();
             courses.add(course);
             students.add(student);
             course.setStudents(students);
@@ -166,7 +167,7 @@ public class CourseService {
         if(prerequisite == null){
             return new ResponseEntity<>("Invalid course prerequisite ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Course> prerequisites= (ArrayList<Course>) course.getPrerequisites();
+        List<Course> prerequisites=course.getPrerequisites();
         prerequisites.add(prerequisite);
         course.setPrerequisites(prerequisites);
         courseRepository.save(course);
@@ -182,7 +183,7 @@ public class CourseService {
         if(prerequisite == null){
             return new ResponseEntity<>("Invalid course prerequisite ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Course> prerequisites= (ArrayList<Course>) course.getPrerequisites();
+        List<Course> prerequisites=course.getPrerequisites();
         prerequisites.remove(prerequisite);
         course.setPrerequisites(prerequisites);
         courseRepository.save(course);
@@ -214,7 +215,7 @@ public class CourseService {
     }
 
     public void setNumberOfCourses(DashboardDTO dashboardDTO) {
-        ArrayList<Course> courses= (ArrayList<Course>) courseRepository.findAll();
+        List<Course> courses= (List<Course>) courseRepository.findAll();
         dashboardDTO.setNumberOfCurrentCourses(courses.size());
     }
 
@@ -227,7 +228,7 @@ public class CourseService {
         if(student==null){
             return new ResponseEntity<>("Invalid student ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
+        List<Course> courses=student.getCourses();
         int index=courses.indexOf(course);
         if(index==-1){
             return new ResponseEntity<>("This course is not enrolled by student",HttpStatus.BAD_REQUEST);
@@ -256,7 +257,7 @@ public class CourseService {
         if(student==null){
             return new ResponseEntity<>("Invalid student ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
+        List<Course> courses=student.getCourses();
         int index=courses.indexOf(course);
         if(index==-1){
             return new ResponseEntity<>("This course is not enrolled by student",HttpStatus.BAD_REQUEST);
@@ -265,8 +266,8 @@ public class CourseService {
             courses.remove(index);
             course.setProgress("Attended");
             courses.add(course);
-            ArrayList<Skill> courseSkills= (ArrayList<Skill>) course.getSkills();
-            ArrayList<Skill> studentSkills= (ArrayList<Skill>) student.getGainedSkills();
+            List<Skill> courseSkills=course.getSkills();
+            List<Skill> studentSkills=student.getGainedSkills();
             for(Skill skill:courseSkills){
                 if(!studentSkills.contains(skill)) {
                     studentSkills.add(skill);
@@ -285,8 +286,8 @@ public class CourseService {
     }
 
     public ResponseEntity<?> recommendStudentsToCourse(Long courseId){
-        ArrayList<Student> students= (ArrayList<Student>) studentRepository.findAll();
-        ArrayList<Student> recommended=new ArrayList<>();
+        List<Student> students=studentRepository.findAll();
+        List<Student> recommended = null;
         Course course=courseRepository.findById(courseId).orElse(null);
         if(course==null){
             return new ResponseEntity<>("Please enter a valid course ID",HttpStatus.BAD_REQUEST);

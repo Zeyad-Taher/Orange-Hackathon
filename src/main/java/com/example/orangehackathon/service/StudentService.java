@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -33,7 +33,7 @@ public class StudentService {
     }
 
     public ResponseEntity<?> showAllStudents() {
-        ArrayList<Student> students = (ArrayList<Student>) studentRepository.findAll();
+        List<Student> students = studentRepository.findAll();
         return new ResponseEntity<>(students,HttpStatus.ACCEPTED);
     }
 
@@ -46,12 +46,12 @@ public class StudentService {
     }
 
     public void setNumberOfStudents(DashboardDTO dashboardDTO) {
-        ArrayList<Student> students= (ArrayList<Student>) studentRepository.findAll();
+        List<Student> students=studentRepository.findAll();
         dashboardDTO.setTotalNumberOfStudents(students.size());
     }
 
     public ResponseEntity<?> findStudentWithSorting(String field){
-        ArrayList<Student> students = (ArrayList<Student>) studentRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+        List<Student> students = studentRepository.findAll(Sort.by(Sort.Direction.ASC,field));
         return new ResponseEntity<>(students,HttpStatus.ACCEPTED);
     }
 
@@ -74,7 +74,7 @@ public class StudentService {
         if(skill==null){
             return new ResponseEntity<>("Please enter a valid skill ID", HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Skill> skills= (ArrayList<Skill>) student.getGainedSkills();
+        List<Skill> skills=student.getGainedSkills();
         skills.add(skill);
         student.setGainedSkills(skills);
         studentRepository.save(student);
@@ -90,7 +90,7 @@ public class StudentService {
         if(skill==null){
             return new ResponseEntity<>("Please enter a valid skill ID", HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Skill> skills= (ArrayList<Skill>) student.getGainedSkills();
+        List<Skill> skills=student.getGainedSkills();
         skills.remove(skill);
         student.setGainedSkills(skills);
         studentRepository.save(student);
@@ -98,7 +98,7 @@ public class StudentService {
     }
 
     public ResponseEntity<?> showStudentsWithNameStarting(String name) {
-        ArrayList<Student> students = studentRepository.findAllByFirstnameStartsWith(name);
+        List<Student> students = studentRepository.findAllByFirstnameStartsWith(name);
         return new ResponseEntity<>(students,HttpStatus.ACCEPTED);
     }
 
@@ -107,12 +107,12 @@ public class StudentService {
         if(course==null){
             return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Student> students=studentRepository.findAllByCoursesContains(course);
+        List<Student> students=studentRepository.findAllByCoursesContains(course);
         return new ResponseEntity<>(students,HttpStatus.ACCEPTED);
     }
 
     public ResponseEntity<?> showStudentsByGender(String gender) {
-        ArrayList<Student> students=studentRepository.findAllByGenderIgnoreCase(gender);
+        List<Student> students=studentRepository.findAllByGenderIgnoreCase(gender);
         return new ResponseEntity<>(students,HttpStatus.ACCEPTED);
     }
 }

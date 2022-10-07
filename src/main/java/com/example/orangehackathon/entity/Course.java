@@ -26,7 +26,7 @@ public class Course {
     private String category;
     @Column(name="location",nullable = false)
     private String location;
-    @Column(name="progress",columnDefinition = "varchar(255) default 'Not invited'")
+    @Column(name="progress",nullable = false)
     private String progress;
     @Column(name="startDate",nullable = false)
     private String startDate;
@@ -62,6 +62,6 @@ public class Course {
         this.prerequisites=new ArrayList<>();
         this.skills=new ArrayList<>();
         this.students=new ArrayList<>();
-        this.supplier=new Supplier();
+        this.supplier=null;
     }
 }

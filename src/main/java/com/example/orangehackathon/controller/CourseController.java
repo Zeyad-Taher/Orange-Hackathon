@@ -1,14 +1,12 @@
 package com.example.orangehackathon.controller;
 
 import com.example.orangehackathon.dto.CourseDTO;
-import com.example.orangehackathon.entity.Course;
 import com.example.orangehackathon.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping(value = "/course")
@@ -27,7 +25,7 @@ public class CourseController {
     }
 
     @PutMapping(value="/add/skill/{courseId}/{skillId}")
-    public ResponseEntity<?> addSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
+    public ResponseEntity<?> addSkillToCourse(@PathVariable Long courseId,@PathVariable Long skillId){
         return courseService.addSkillToCourse(courseId,skillId);
     }
 

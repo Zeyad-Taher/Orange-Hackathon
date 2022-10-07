@@ -1,8 +1,6 @@
 package com.example.orangehackathon.dto;
 
 import lombok.*;
-
-import java.sql.Time;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

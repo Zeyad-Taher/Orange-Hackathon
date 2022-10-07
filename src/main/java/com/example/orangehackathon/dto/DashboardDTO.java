@@ -3,7 +3,7 @@ package com.example.orangehackathon.dto;
 import com.example.orangehackathon.entity.Supplier;
 import lombok.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class DashboardDTO {
     private float totalDebt;
     private float totalPaid;
     private float totalRemaining;
-    private ArrayList<Supplier> suppliers;
+    private List<Supplier> suppliers;
 
     public DashboardDTO(){
         setMaxNumberOfCourses(40);

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SupplierService {
@@ -23,7 +23,7 @@ public class SupplierService {
     }
 
     public ResponseEntity<?> showAllSuppliers() {
-        ArrayList<Supplier> suppliers = (ArrayList<Supplier>) supplierRepository.findAll();
+        List<Supplier> suppliers = (List<Supplier>) supplierRepository.findAll();
         return new ResponseEntity<>(suppliers,HttpStatus.ACCEPTED);
     }
 
@@ -42,7 +42,7 @@ public class SupplierService {
     public ResponseEntity<?> getDashboard(DashboardDTO dashboardDTO) {
         dashboardDTO.setTotalPaid(0);
         dashboardDTO.setTotalDebt(0);
-        ArrayList<Supplier> suppliers = (ArrayList<Supplier>) supplierRepository.findAll();
+        List<Supplier> suppliers = (List<Supplier>) supplierRepository.findAll();
         dashboardDTO.setSuppliers(suppliers);
         for(Supplier supplier : suppliers){
             dashboardDTO.setTotalDebt(dashboardDTO.getTotalDebt()+supplier.getDebt());

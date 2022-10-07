@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class CompareTwoDates {
 
-    public boolean compareDateAndTime(Course course, ArrayList<Course> enrolled) throws ParseException {
+    public boolean compareDateAndTime(Course course, List<Course> enrolled) throws ParseException {
         SimpleDateFormat sdformat = new SimpleDateFormat("dd-MM-yyyy");
         Date courseStartDate = sdformat.parse(course.getStartDate());
         Date courseEndDate = sdformat.parse(course.getEndDate());

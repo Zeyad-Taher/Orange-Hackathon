@@ -44,6 +44,9 @@ public class Student {
         this.lastname=studentDTO.getLastname();
         this.email=studentDTO.getEmail();
         this.age= studentDTO.getAge();
+        this.gender=studentDTO.getGender();
+        this.phoneNumber=studentDTO.getPhoneNumber();
+        this.nationalId=studentDTO.getNationalId();
         this.courses=new ArrayList<>();
         this.gainedSkills=new ArrayList<>();
     }

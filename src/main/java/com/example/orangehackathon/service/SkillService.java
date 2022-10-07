@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SkillService {
@@ -23,7 +23,7 @@ public class SkillService {
     }
 
     public ResponseEntity<?> showAllSkills() {
-        ArrayList<Skill> skills = (ArrayList<Skill>) skillRepository.findAll();
+        List<Skill> skills = (List<Skill>) skillRepository.findAll();
         return new ResponseEntity<>(skills,HttpStatus.ACCEPTED);
     }
 

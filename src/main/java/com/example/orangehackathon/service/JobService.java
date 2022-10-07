@@ -3,13 +3,12 @@ package com.example.orangehackathon.service;
 import com.example.orangehackathon.dto.JobDTO;
 import com.example.orangehackathon.entity.Job;
 import com.example.orangehackathon.repository.JobRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class JobService {
@@ -23,7 +22,7 @@ public class JobService {
     }
 
     public ResponseEntity<?> showAllJobs() {
-        ArrayList<Job> jobs = (ArrayList<Job>) jobRepository.findAll();
+        List<Job> jobs = (List<Job>) jobRepository.findAll();
         return new ResponseEntity<>(jobs,HttpStatus.ACCEPTED);
     }
 
