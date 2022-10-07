@@ -23,9 +23,4 @@ public class SupplierController {
     public ResponseEntity<?> showAllSuppliers(){
         return supplierService.showAllSuppliers();
     }
-
-    @DeleteMapping(value = "/del/{id}")
-    public ResponseEntity<?> deleteSupplier(@PathVariable Long id){
-        return supplierService.deleteSupplier(id);
-    }
 }

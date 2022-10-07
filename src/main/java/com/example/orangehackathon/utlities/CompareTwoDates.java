@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CompareTwoDates {
@@ -22,12 +23,12 @@ public class CompareTwoDates {
             sdformat.format(courseEndDate);
             sdformat.format(enrolledStartDate);
             sdformat.format(enrolledEndDate);
-            if ((courseStartDate.compareTo(enrolledStartDate) >= 0 && courseStartDate.compareTo(enrolledEndDate) <= 0)
-                    || (courseEndDate.compareTo(enrolledEndDate) <= 0 && courseEndDate.compareTo(enrolledStartDate) >= 0)) {
-                int courseStartTime=timeToMins(course.getStartTime());
-                int courseEndTime=timeToMins(course.getEndTime());
-                int enrolledStartTime=timeToMins(enrolledCourse.getStartTime());
-                int enrolledEndTime=timeToMins(enrolledCourse.getStartTime());
+            if (((courseStartDate.compareTo(enrolledStartDate) >= 0 && courseStartDate.compareTo(enrolledEndDate) <= 0)
+                    || (courseEndDate.compareTo(enrolledEndDate) <= 0 && courseEndDate.compareTo(enrolledStartDate) >= 0))&&(!Objects.equals(enrolledCourse.getProgress(), "Time conflict") && !Objects.equals(enrolledCourse.getProgress(), "Attended"))) {
+                int courseStartTime=timeToHour(course.getStartTime());
+                int courseEndTime=timeToHour(course.getEndTime());
+                int enrolledStartTime=timeToHour(enrolledCourse.getStartTime());
+                int enrolledEndTime=timeToHour(enrolledCourse.getStartTime());
                 if((courseStartTime>=enrolledStartTime && courseStartTime<=enrolledEndTime)
                         ||(courseEndTime<=enrolledEndTime && courseEndTime>=enrolledStartTime)){
                     return false;
@@ -42,8 +43,8 @@ public class CompareTwoDates {
         return true;
     }
 
-    public int timeToMins(String time){
+    public int timeToHour(String time){
         String[] arrOfTime = time.split(":");
-        return Integer.parseInt(arrOfTime[0])*60+Integer.parseInt(arrOfTime[1]);
+        return Integer.parseInt(arrOfTime[0]);
     }
 }

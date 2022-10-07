@@ -26,7 +26,7 @@ public class StudentController {
         return studentService.showAllStudents();
     }
 
-    @GetMapping("/{field}")
+    @GetMapping("/sort/{field}")
     private ResponseEntity<?> getStudentsWithSort(@PathVariable String field){
         return studentService.findStudentWithSorting(field);
     }
@@ -51,15 +51,15 @@ public class StudentController {
         return studentService.delSkillToStudent(studentId,skillId);
     }
 
-    @GetMapping(value = "/{name}")
+    @GetMapping(value = "/findBy/name/{name}")
     public ResponseEntity<?> showStudentsWithNameStarting(@PathVariable String name){
         return studentService.showStudentsWithNameStarting(name);
     }
-    @GetMapping(value = "/{courseId}")
+    @GetMapping(value = "/findBy/course/{courseId}")
     public ResponseEntity<?> showStudentsEnrollingCourse(@PathVariable Long courseId){
         return studentService.showStudentsEnrollingCourse(courseId);
     }
-    @GetMapping(value = "/{gender}")
+    @GetMapping(value = "/findBy/gender/{gender}")
     public ResponseEntity<?> showStudentsByGender(@PathVariable String gender){
         return studentService.showStudentsByGender(gender);
     }

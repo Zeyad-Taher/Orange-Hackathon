@@ -27,14 +27,6 @@ public class SupplierService {
         return new ResponseEntity<>(suppliers,HttpStatus.ACCEPTED);
     }
 
-    public ResponseEntity<?> deleteSupplier(Long id) {
-        if(!supplierRepository.findById(id).isPresent()){
-            return new ResponseEntity<>("Invalid supplier ID",HttpStatus.BAD_REQUEST);
-        }
-        supplierRepository.deleteById(id);
-        return new ResponseEntity<>("Supplier deleted Successfully",HttpStatus.ACCEPTED);
-    }
-
     public Supplier findSupplierById(Long supplierId) {
         return supplierRepository.findById(supplierId).orElse(null);
     }
@@ -48,7 +40,7 @@ public class SupplierService {
             dashboardDTO.setTotalDebt(dashboardDTO.getTotalDebt()+supplier.getDebt());
             dashboardDTO.setTotalPaid(dashboardDTO.getTotalPaid()+supplier.getPaid());
         }
-        dashboardDTO.setTotalRemaining(dashboardDTO.getTotalDebt()- dashboardDTO.getTotalRemaining());
+        dashboardDTO.setTotalRemaining(dashboardDTO.getTotalDebt() - dashboardDTO.getTotalPaid());
         return new ResponseEntity<>(dashboardDTO, HttpStatus.ACCEPTED);
     }
 }

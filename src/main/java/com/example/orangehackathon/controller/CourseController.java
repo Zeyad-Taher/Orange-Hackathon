@@ -9,73 +9,73 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping(value = "/course")
+@RequestMapping
 public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @PostMapping(value = "/add")
+    @PostMapping(value = "/course/add")
     public ResponseEntity<?> addCourse(@RequestBody CourseDTO courseDTO){
         return courseService.addCourse(courseDTO);
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping(value = "/course/all")
     public ResponseEntity<?> showAllCourses(){
         return courseService.showAllCourses();
     }
 
-    @PutMapping(value="/add/skill/{courseId}/{skillId}")
+    @PutMapping(value="/course/add/skill/{courseId}/{skillId}")
     public ResponseEntity<?> addSkillToCourse(@PathVariable Long courseId,@PathVariable Long skillId){
         return courseService.addSkillToCourse(courseId,skillId);
     }
 
-    @PutMapping(value="/enroll/student/{courseId}/{studentId}")
+    @PutMapping(value="/course/enroll/student/{courseId}/{studentId}")
     public ResponseEntity<?> enrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId) throws ParseException {
         return courseService.enrollStudentToCourse(courseId,studentId);
     }
 
-    @PutMapping(value="/add/pre/{courseId}/{preId}")
+    @PutMapping(value="/course/add/pre/{courseId}/{preId}")
     public ResponseEntity<?> assignStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
         return courseService.addPrerequisiteToCourse(courseId,preId);
     }
 
-    @PutMapping(value="/add/sup/{courseId}/{supId}")
+    @PutMapping(value="/course/add/sup/{courseId}/{supId}")
     public ResponseEntity<?> assignSupToCourse(@PathVariable Long courseId, @PathVariable Long supId){
         return courseService.addSupplierToCourse(courseId,supId);
     }
 
-    @PutMapping(value="/del/skill/{courseId}/{skillId}")
+    @PutMapping(value="/course/del/skill/{courseId}/{skillId}")
     public ResponseEntity<?> delSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
         return courseService.delSkillToCourse(courseId,skillId);
     }
 
-    @PutMapping(value="/del/pre/{courseId}/{preId}")
+    @PutMapping(value="/course/del/pre/{courseId}/{preId}")
     public ResponseEntity<?> delStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
         return courseService.delPrerequisiteToCourse(courseId,preId);
     }
 
-    @PutMapping(value="/del/sup/{courseId}")
+    @PutMapping(value="/course/del/sup/{courseId}")
     public ResponseEntity<?> delSupToCourse(@PathVariable Long courseId){
         return courseService.delSupplierToCourse(courseId);
     }
 
-    @PutMapping(value="/update/student/{courseId}/{studentId}/{progress}")
+    @PutMapping(value="/course/update/student/{courseId}/{studentId}/{progress}")
     public ResponseEntity<?> enrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId,@PathVariable String progress) {
         return courseService.setStudentProgressInCourse(courseId,studentId,progress);
     }
 
-    @GetMapping(value = "/recommend/courseId")
+    @GetMapping(value = "/course/recommend/{courseId}")
     public ResponseEntity<?> recommendStudentToCourse(@PathVariable Long courseId){
         return courseService.recommendStudentsToCourse(courseId);
     }
 
-    @GetMapping(value = "/recommend/jobId")
+    @GetMapping(value = "/job/recommend/{jobId}")
     public ResponseEntity<?> recommendStudentToJob(@PathVariable Long jobId){
         return courseService.recommendStudentsToJob(jobId);
     }
 
-    @PutMapping(value="done/{courseId}/{studentId}")
-    public ResponseEntity<?> finishCourseByStudent(Long courseId,Long studentId){
+    @PutMapping(value="/course/done/{courseId}/{studentId}")
+    public ResponseEntity<?> finishCourseByStudent(@PathVariable Long courseId,@PathVariable Long studentId){
         return courseService.finishCourseByStudent(courseId,studentId);
     }
 }

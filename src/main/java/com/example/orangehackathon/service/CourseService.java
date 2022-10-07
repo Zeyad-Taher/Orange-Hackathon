@@ -287,14 +287,14 @@ public class CourseService {
 
     public ResponseEntity<?> recommendStudentsToCourse(Long courseId){
         List<Student> students=studentRepository.findAll();
-        List<Student> recommended = null;
+        List<Student> recommended = new ArrayList<>();
         Course course=courseRepository.findById(courseId).orElse(null);
         if(course==null){
             return new ResponseEntity<>("Please enter a valid course ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Skill> courseSkills= (ArrayList<Skill>) course.getSkills();
+        List<Skill> courseSkills= course.getSkills();
         for (Student student:students){
-            ArrayList<Skill> studentSkills= (ArrayList<Skill>) student.getGainedSkills();
+            List<Skill> studentSkills=student.getGainedSkills();
             boolean meetCriteria=checkPrerequisites(course,studentSkills);
             if(meetCriteria){
                 recommended.add(student);
@@ -309,15 +309,15 @@ public class CourseService {
     }
 
     public ResponseEntity<?> recommendStudentsToJob(Long jobId){
-        ArrayList<Student> students= (ArrayList<Student>) studentRepository.findAll();
-        ArrayList<Student> recommended=new ArrayList<>();
+        List<Student> students=studentRepository.findAll();
+        List<Student> recommended = new ArrayList<>();
         Job job=jobService.findJobById(jobId);
         if(job==null){
             return new ResponseEntity<>("Please enter a valid job ID",HttpStatus.BAD_REQUEST);
         }
-        ArrayList<Skill> jobSkills= (ArrayList<Skill>) job.getRequiredSkills();
+        List<Skill> jobSkills=job.getRequiredSkills();
         for (Student student:students){
-            ArrayList<Skill> studentSkills= (ArrayList<Skill>) student.getGainedSkills();
+            List<Skill> studentSkills=student.getGainedSkills();
             boolean meetCriteria=true;
             for (Skill skill:jobSkills){
                 if(!studentSkills.contains(skill)){

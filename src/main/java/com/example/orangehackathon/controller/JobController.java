@@ -24,8 +24,8 @@ public class JobController {
         return jobService.showAllJobs();
     }
 
-    @DeleteMapping(value = "/del/{id}")
-    public ResponseEntity<?> deleteJob(@PathVariable Long id){
-        return jobService.deleteJob(id);
+    @PutMapping(value="/add/skill/{jobId}/{skillId}")
+    public ResponseEntity<?> addSkillToJob(@PathVariable Long jobId,@PathVariable Long skillId){
+        return jobService.addSkillToJob(jobId,skillId);
     }
 }
