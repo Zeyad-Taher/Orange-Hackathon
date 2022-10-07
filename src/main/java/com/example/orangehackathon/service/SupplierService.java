@@ -5,6 +5,8 @@ import com.example.orangehackathon.dto.SupplierDTO;
 import com.example.orangehackathon.entity.Supplier;
 import com.example.orangehackathon.repository.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,37 +16,39 @@ public class SupplierService {
     @Autowired
     private SupplierRepository supplierRepository;
 
-    public void addSupplier(SupplierDTO supplierDTO) {
+    public ResponseEntity<?> addSupplier(SupplierDTO supplierDTO) {
         Supplier supplier=new Supplier(supplierDTO);
         supplierRepository.save(supplier);
+        return new ResponseEntity<>(supplier,HttpStatus.ACCEPTED);
     }
 
-    public ArrayList<Supplier> showAllSuppliers() {
-        return (ArrayList<Supplier>) supplierRepository.findAll();
+    public ResponseEntity<?> showAllSuppliers() {
+        ArrayList<Supplier> suppliers = (ArrayList<Supplier>) supplierRepository.findAll();
+        return new ResponseEntity<>(suppliers,HttpStatus.ACCEPTED);
     }
 
-    public void deleteSupplier(Long id) {
+    public ResponseEntity<?> deleteSupplier(Long id) {
+        if(!supplierRepository.findById(id).isPresent()){
+            return new ResponseEntity<>("Invalid supplier ID",HttpStatus.BAD_REQUEST);
+        }
         supplierRepository.deleteById(id);
+        return new ResponseEntity<>("Supplier deleted Successfully",HttpStatus.ACCEPTED);
     }
 
     public Supplier findSupplierById(Long supplierId) {
-        return supplierRepository.findById(supplierId).get();
+        return supplierRepository.findById(supplierId).orElse(null);
     }
 
-    public void saveSupplier(Supplier supplier) {
-        supplierRepository.save(supplier);
-    }
-
-    public DashboardDTO getDashboard(DashboardDTO dashboardDTO) {
+    public ResponseEntity<?> getDashboard(DashboardDTO dashboardDTO) {
         dashboardDTO.setTotalPaid(0);
         dashboardDTO.setTotalDebt(0);
-        ArrayList<Supplier> suppliers = showAllSuppliers();
+        ArrayList<Supplier> suppliers = (ArrayList<Supplier>) supplierRepository.findAll();
         dashboardDTO.setSuppliers(suppliers);
         for(Supplier supplier : suppliers){
             dashboardDTO.setTotalDebt(dashboardDTO.getTotalDebt()+supplier.getDebt());
             dashboardDTO.setTotalPaid(dashboardDTO.getTotalPaid()+supplier.getPaid());
         }
         dashboardDTO.setTotalRemaining(dashboardDTO.getTotalDebt()- dashboardDTO.getTotalRemaining());
-        return dashboardDTO;
+        return new ResponseEntity<>(dashboardDTO, HttpStatus.ACCEPTED);
     }
 }

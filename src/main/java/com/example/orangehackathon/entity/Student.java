@@ -33,8 +33,6 @@ public class Student {
     private String phoneNumber;
     @Column(name="nationalId",nullable = false)
     private String nationalId;
-    @Column(name="status",nullable = false)
-    private String status;
     @ManyToMany(mappedBy = "students")
     List<Course> courses;
     @ManyToMany

@@ -4,6 +4,7 @@ import com.example.orangehackathon.dto.SkillDTO;
 import com.example.orangehackathon.entity.Skill;
 import com.example.orangehackathon.service.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,17 +16,12 @@ public class SkillController {
     private SkillService skillService;
 
     @PostMapping(value = "/add")
-    public void addSkill(@RequestBody SkillDTO skillDTO){
-        skillService.addSkill(skillDTO);
+    public ResponseEntity<?> addSkill(@RequestBody SkillDTO skillDTO){
+        return skillService.addSkill(skillDTO);
     }
 
     @GetMapping(value = "/all")
-    public ArrayList<Skill> showAllSkills(){
+    public ResponseEntity<?> showAllSkills(){
         return skillService.showAllSkills();
-    }
-
-    @DeleteMapping(value = "/del/{id}")
-    public void deleteCourse(@PathVariable Long id) {
-        skillService.deleteSkill(id);
     }
 }

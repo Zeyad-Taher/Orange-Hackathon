@@ -5,6 +5,8 @@ import com.example.orangehackathon.entity.Job;
 import com.example.orangehackathon.repository.JobRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,24 +16,26 @@ public class JobService {
     @Autowired
     private JobRepository jobRepository;
 
-    public void addJob(JobDTO jobDTO) {
+    public ResponseEntity<?> addJob(JobDTO jobDTO) {
         Job job=new Job(jobDTO);
         jobRepository.save(job);
+        return new ResponseEntity<>(job, HttpStatus.ACCEPTED);
     }
 
-    public ArrayList<Job> showAllJobs() {
-        return (ArrayList<Job>) jobRepository.findAll();
+    public ResponseEntity<?> showAllJobs() {
+        ArrayList<Job> jobs = (ArrayList<Job>) jobRepository.findAll();
+        return new ResponseEntity<>(jobs,HttpStatus.ACCEPTED);
     }
 
-    public void deleteJob(Long id) {
+    public ResponseEntity<?> deleteJob(Long id) {
+        if(!jobRepository.findById(id).isPresent()){
+            return new ResponseEntity<>("Invalid job ID",HttpStatus.BAD_REQUEST);
+        }
         jobRepository.deleteById(id);
+        return new ResponseEntity<>("Job deleted successfully",HttpStatus.ACCEPTED);
     }
 
     public Job findJobById(Long jobId) {
         return jobRepository.findById(jobId).orElse(null);
-    }
-
-    public void saveJob(Job job) {
-        jobRepository.save(job);
     }
 }

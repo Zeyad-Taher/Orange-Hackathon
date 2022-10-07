@@ -17,4 +17,9 @@ public class StudentDTO {
     private String lastname;
     private String email;
     private int age;
+    private String gender;
+    private String phoneNumber;
+    private String nationalId;
+    List<Course> courses;
+    List<Skill> gainedSkills;
 }

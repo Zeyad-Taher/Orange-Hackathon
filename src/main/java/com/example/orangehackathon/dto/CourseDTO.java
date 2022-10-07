@@ -15,7 +15,6 @@ public class CourseDTO {
     private String category;
     private String location;
     private String progress;
-    private String cooperation;
     private String startDate;
     private String endDate;
     private String startTime;

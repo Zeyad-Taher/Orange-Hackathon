@@ -4,6 +4,7 @@ import com.example.orangehackathon.dto.CourseDTO;
 import com.example.orangehackathon.dto.DashboardDTO;
 import com.example.orangehackathon.entity.*;
 import com.example.orangehackathon.repository.CourseRepository;
+import com.example.orangehackathon.repository.StudentRepository;
 import com.example.orangehackathon.utlities.CompareTwoDates;
 import com.example.orangehackathon.utlities.EmailDetails;
 import com.example.orangehackathon.utlities.EmailService;
@@ -24,6 +25,8 @@ public class CourseService {
     @Autowired
     private StudentService studentService;
     @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
     private SupplierService supplierService;
     @Autowired
     private CompareTwoDates compareTwoDates;
@@ -32,35 +35,46 @@ public class CourseService {
     @Autowired
     private JobService jobService;
 
-    public void addCourse(CourseDTO courseDTO) {
+    public ResponseEntity<?> addCourse(CourseDTO courseDTO) {
         Course course = new Course(courseDTO);
         courseRepository.save(course);
+        return new ResponseEntity<>(course,HttpStatus.ACCEPTED);
     }
 
-    public ArrayList<Course> showAllCourses() {
-        return (ArrayList<Course>) courseRepository.findAll();
+    public ResponseEntity<?> showAllCourses() {
+        return new ResponseEntity<>((ArrayList<Course>) courseRepository.findAll(),HttpStatus.ACCEPTED);
     }
 
-    public void deleteCourse(Long id) {
-        courseRepository.deleteById(id);
-    }
-
-    public void addSkillToCourse(Long courseId, Long skillId) {
-        Course course = courseRepository.findById(courseId).get();
+    public ResponseEntity<?> addSkillToCourse(Long courseId, Long skillId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        if(course == null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
         Skill skill = skillService.findSkillById(skillId);
+        if(skill == null){
+            return new ResponseEntity<>("Invalid skill ID",HttpStatus.BAD_REQUEST);
+        }
         ArrayList<Skill> skills= (ArrayList<Skill>) course.getSkills();
         skills.add(skill);
         course.setSkills(skills);
         courseRepository.save(course);
+        return new ResponseEntity<>(course,HttpStatus.ACCEPTED);
     }
 
-    public void delSkillToCourse(Long courseId, Long skillId) {
-        Course course = courseRepository.findById(courseId).get();
+    public ResponseEntity<?> delSkillToCourse(Long courseId, Long skillId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        if(course == null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
         Skill skill = skillService.findSkillById(skillId);
+        if(skill == null){
+            return new ResponseEntity<>("Invalid skill ID",HttpStatus.BAD_REQUEST);
+        }
         ArrayList<Skill> skills= (ArrayList<Skill>) course.getSkills();
         skills.remove(skill);
         course.setSkills(skills);
         courseRepository.save(course);
+        return new ResponseEntity<>(course,HttpStatus.ACCEPTED);
     }
 
     public boolean checkConflict(Course course,ArrayList<Course> enrolled) throws ParseException {
@@ -81,8 +95,14 @@ public class CourseService {
     }
 
     public ResponseEntity<?> enrollStudentToCourse(Long courseId, Long studentId) throws ParseException {
-        Course course = courseRepository.findById(courseId).get();
+        Course course = courseRepository.findById(courseId).orElse(null);
+        if(course == null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
         Student student = studentService.findStudentById(studentId);
+        if(student == null){
+            return new ResponseEntity<>("Invalid student ID",HttpStatus.BAD_REQUEST);
+        }
         ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
         if(!checkConflict(course,courses)){
             course.setProgress("Time conflict");
@@ -137,53 +157,65 @@ public class CourseService {
         }
     }
 
-    public void unrollStudentToCourse(Long courseId, Long studentId) {
-        Course course = courseRepository.findById(courseId).get();
-        Student student = studentService.findStudentById(studentId);
-        ArrayList<Student> students= (ArrayList<Student>) course.getStudents();
-        ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
-        students.remove(student);
-        courses.remove(course);
-        course.setStudents(students);
-        student.setCourses(courses);
-        courseRepository.save(course);
-        studentService.saveStudent(student);
-    }
-
-    public void addPrerequisiteToCourse(Long courseId, Long preId) {
-        Course course=courseRepository.findById(courseId).get();
-        Course prerequisite=courseRepository.findById(preId).get();
+    public ResponseEntity<?> addPrerequisiteToCourse(Long courseId, Long preId) {
+        Course course=courseRepository.findById(courseId).orElse(null);
+        if(course == null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
+        Course prerequisite=courseRepository.findById(preId).orElse(null);
+        if(prerequisite == null){
+            return new ResponseEntity<>("Invalid course prerequisite ID",HttpStatus.BAD_REQUEST);
+        }
         ArrayList<Course> prerequisites= (ArrayList<Course>) course.getPrerequisites();
         prerequisites.add(prerequisite);
         course.setPrerequisites(prerequisites);
         courseRepository.save(course);
+        return new ResponseEntity<>(course,HttpStatus.ACCEPTED);
     }
 
-    public void delPrerequisiteToCourse(Long courseId, Long preId) {
-        Course course=courseRepository.findById(courseId).get();
-        Course prerequisite=courseRepository.findById(preId).get();
+    public ResponseEntity<?> delPrerequisiteToCourse(Long courseId, Long preId) {
+        Course course=courseRepository.findById(courseId).orElse(null);
+        if(course == null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
+        Course prerequisite=courseRepository.findById(preId).orElse(null);
+        if(prerequisite == null){
+            return new ResponseEntity<>("Invalid course prerequisite ID",HttpStatus.BAD_REQUEST);
+        }
         ArrayList<Course> prerequisites= (ArrayList<Course>) course.getPrerequisites();
         prerequisites.remove(prerequisite);
         course.setPrerequisites(prerequisites);
         courseRepository.save(course);
+        return new ResponseEntity<>(course,HttpStatus.ACCEPTED);
     }
 
-    public void addSupplierToCourse(Long courseId, Long supId) {
-        Course course=courseRepository.findById(courseId).get();
+    public ResponseEntity<?> addSupplierToCourse(Long courseId, Long supId) {
+        Course course=courseRepository.findById(courseId).orElse(null);
+        if(course == null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
         Supplier supplier=supplierService.findSupplierById(supId);
+        if(supplier == null){
+            return new ResponseEntity<>("Invalid supplier ID",HttpStatus.BAD_REQUEST);
+        }
         course.setSupplier(supplier);
         courseRepository.save(course);
+        return new ResponseEntity<>(course,HttpStatus.ACCEPTED);
     }
 
-    public void delSupplierToCourse(Long courseId) {
-        Course course=courseRepository.findById(courseId).get();
-        course.setSupplier(new Supplier());
+    public ResponseEntity<?> delSupplierToCourse(Long courseId) {
+        Course course=courseRepository.findById(courseId).orElse(null);
+        if(course == null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
+        course.setSupplier(null);
         courseRepository.save(course);
+        return new ResponseEntity<>(course,HttpStatus.ACCEPTED);
     }
 
     public void setNumberOfCourses(DashboardDTO dashboardDTO) {
-        int courses=showAllCourses().size();
-        dashboardDTO.setNumberOfCurrentCourses(courses);
+        ArrayList<Course> courses= (ArrayList<Course>) courseRepository.findAll();
+        dashboardDTO.setNumberOfCurrentCourses(courses.size());
     }
 
     public ResponseEntity<?> setStudentProgressInCourse(Long courseId,Long studentId,String progress){
@@ -192,6 +224,9 @@ public class CourseService {
             return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
         }
         Student student=studentService.findStudentById(studentId);
+        if(student==null){
+            return new ResponseEntity<>("Invalid student ID",HttpStatus.BAD_REQUEST);
+        }
         ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
         int index=courses.indexOf(course);
         if(index==-1){
@@ -212,8 +247,45 @@ public class CourseService {
         }
     }
 
+    public ResponseEntity<?> finishCourseByStudent(Long courseId,Long studentId){
+        Course course=courseRepository.findById(courseId).orElse(null);
+        if(course==null){
+            return new ResponseEntity<>("Invalid course ID",HttpStatus.BAD_REQUEST);
+        }
+        Student student=studentService.findStudentById(studentId);
+        if(student==null){
+            return new ResponseEntity<>("Invalid student ID",HttpStatus.BAD_REQUEST);
+        }
+        ArrayList<Course> courses= (ArrayList<Course>) student.getCourses();
+        int index=courses.indexOf(course);
+        if(index==-1){
+            return new ResponseEntity<>("This course is not enrolled by student",HttpStatus.BAD_REQUEST);
+        }
+        else{
+            courses.remove(index);
+            course.setProgress("Attended");
+            courses.add(course);
+            ArrayList<Skill> courseSkills= (ArrayList<Skill>) course.getSkills();
+            ArrayList<Skill> studentSkills= (ArrayList<Skill>) student.getGainedSkills();
+            for(Skill skill:courseSkills){
+                if(!studentSkills.contains(skill)) {
+                    studentSkills.add(skill);
+                }
+            }
+            student.setGainedSkills(studentSkills);
+            studentService.saveStudent(student);
+            EmailDetails email = new EmailDetails();
+            email.setRecipient(student.getEmail());
+            email.setMsgBody("Hello "+student.getFirstname()+"Congratulation,\nYour progress in "+course.getName()+" course has come " +
+                    "to an end.\nBest of Luck.");
+            email.setSubject("ODC - Course registration");
+            emailService.sendSimpleMail(email);
+            return new ResponseEntity<>("Student Progress updated successfully. Email will be sent shortly.",HttpStatus.ACCEPTED);
+        }
+    }
+
     public ResponseEntity<?> recommendStudentsToCourse(Long courseId){
-        ArrayList<Student> students=studentService.showAllStudents();
+        ArrayList<Student> students= (ArrayList<Student>) studentRepository.findAll();
         ArrayList<Student> recommended=new ArrayList<>();
         Course course=courseRepository.findById(courseId).orElse(null);
         if(course==null){
@@ -236,7 +308,7 @@ public class CourseService {
     }
 
     public ResponseEntity<?> recommendStudentsToJob(Long jobId){
-        ArrayList<Student> students=studentService.showAllStudents();
+        ArrayList<Student> students= (ArrayList<Student>) studentRepository.findAll();
         ArrayList<Student> recommended=new ArrayList<>();
         Job job=jobService.findJobById(jobId);
         if(job==null){

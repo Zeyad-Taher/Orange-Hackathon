@@ -17,23 +17,18 @@ public class CourseController {
     private CourseService courseService;
 
     @PostMapping(value = "/add")
-    public void addCourse(@RequestBody CourseDTO courseDTO){
-        courseService.addCourse(courseDTO);
+    public ResponseEntity<?> addCourse(@RequestBody CourseDTO courseDTO){
+        return courseService.addCourse(courseDTO);
     }
 
     @GetMapping(value = "/all")
-    public ArrayList<Course> showAllCourses(){
+    public ResponseEntity<?> showAllCourses(){
         return courseService.showAllCourses();
     }
 
-    @DeleteMapping(value = "/del/{id}")
-    public void deleteCourse(@PathVariable Long id){
-        courseService.deleteCourse(id);
-    }
-
     @PutMapping(value="/add/skill/{courseId}/{skillId}")
-    public void addSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
-        courseService.addSkillToCourse(courseId,skillId);
+    public ResponseEntity<?> addSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
+        return courseService.addSkillToCourse(courseId,skillId);
     }
 
     @PutMapping(value="/enroll/student/{courseId}/{studentId}")
@@ -42,33 +37,28 @@ public class CourseController {
     }
 
     @PutMapping(value="/add/pre/{courseId}/{preId}")
-    public void assignStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
-        courseService.addPrerequisiteToCourse(courseId,preId);
+    public ResponseEntity<?> assignStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
+        return courseService.addPrerequisiteToCourse(courseId,preId);
     }
 
     @PutMapping(value="/add/sup/{courseId}/{supId}")
-    public void assignSupToCourse(@PathVariable Long courseId, @PathVariable Long supId){
-        courseService.addSupplierToCourse(courseId,supId);
+    public ResponseEntity<?> assignSupToCourse(@PathVariable Long courseId, @PathVariable Long supId){
+        return courseService.addSupplierToCourse(courseId,supId);
     }
 
     @PutMapping(value="/del/skill/{courseId}/{skillId}")
-    public void delSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
-        courseService.delSkillToCourse(courseId,skillId);
-    }
-
-    @PutMapping(value="/unroll/student/{courseId}/{studentId}")
-    public void unrollStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId){
-        courseService.unrollStudentToCourse(courseId,studentId);
+    public ResponseEntity<?> delSkillToCourse(@PathVariable Long courseId, @PathVariable Long skillId){
+        return courseService.delSkillToCourse(courseId,skillId);
     }
 
     @PutMapping(value="/del/pre/{courseId}/{preId}")
-    public void delStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
-        courseService.delPrerequisiteToCourse(courseId,preId);
+    public ResponseEntity<?> delStudentToCourse(@PathVariable Long courseId, @PathVariable Long preId){
+        return courseService.delPrerequisiteToCourse(courseId,preId);
     }
 
     @PutMapping(value="/del/sup/{courseId}")
-    public void delSupToCourse(@PathVariable Long courseId){
-        courseService.delSupplierToCourse(courseId);
+    public ResponseEntity<?> delSupToCourse(@PathVariable Long courseId){
+        return courseService.delSupplierToCourse(courseId);
     }
 
     @PutMapping(value="/update/student/{courseId}/{studentId}/{progress}")
@@ -84,5 +74,10 @@ public class CourseController {
     @GetMapping(value = "/recommend/jobId")
     public ResponseEntity<?> recommendStudentToJob(@PathVariable Long jobId){
         return courseService.recommendStudentsToJob(jobId);
+    }
+
+    @PutMapping(value="done/{courseId}/{studentId}")
+    public ResponseEntity<?> finishCourseByStudent(Long courseId,Long studentId){
+        return courseService.finishCourseByStudent(courseId,studentId);
     }
 }
